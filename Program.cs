@@ -4,7 +4,7 @@ namespace MJU23v_D10_inl_sveng
 {
     internal class Program
     {
-        static List<SweEngGloss> dictionary;
+        static List<SweEngGloss> dictionary = new List<SweEngGloss>();
         class SweEngGloss
         {
             public string word_swe, word_eng;
@@ -88,7 +88,7 @@ namespace MJU23v_D10_inl_sveng
                 {
                     if (argument.Length == 3)
                     {
-                        dictionary.Add(new SweEngGloss(argument[1], argument[2]));
+                        dictionary.Add(new(argument[1], argument[2]));
                     }
                     else if(argument.Length == 1)
                     {
@@ -97,7 +97,7 @@ namespace MJU23v_D10_inl_sveng
                         Console.Write("Write word in English: ");
                         string englishWord = Console.ReadLine();
 
-                        dictionary.Add(new SweEngGloss(swedishWord, englishWord)); //TODO - Add error handler for NullReferenceException. (And other exceptions)
+                        dictionary.Add(new(swedishWord, englishWord)); //TODO - Add error handler for NullReferenceException. (And other exceptions)
                     }
                 }
                 else if (command == "delete")

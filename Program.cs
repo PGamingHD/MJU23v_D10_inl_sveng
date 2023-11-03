@@ -33,6 +33,7 @@
                 {
                     if(argument.Length == 2)
                     {
+                        //TODO - Add error handler for System.IO.FileNotFoundException (And other exceptions) 
                         using (StreamReader sr = new StreamReader(argument[1]))
                         {
                             dictionary = new List<SweEngGloss>(); // Empty it!
@@ -62,7 +63,8 @@
                 }
                 else if (command == "list")
                 {
-                    foreach(SweEngGloss gloss in dictionary)
+                    //TODO - Add NullReferenceException error handler over here!
+                    foreach (SweEngGloss gloss in dictionary)
                     {
                         Console.WriteLine($"{gloss.word_swe,-10}  - {gloss.word_eng,-10}");
                     }
@@ -101,7 +103,7 @@
                         Console.Write("Write word in English: ");
                         string e = Console.ReadLine();
                         int index = -1;
-                        for (int i = 0; i < dictionary.Count; i++)
+                        for (int i = 0; i < dictionary.Count; i++) //TODO - Add error handler for NullReferenceException if delete ran with no commands in list!
                         {
                             SweEngGloss gloss = dictionary[i];
                             if (gloss.word_swe == s && gloss.word_eng == e)

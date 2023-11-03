@@ -54,6 +54,10 @@ namespace MJU23v_D10_inl_sveng
                     {
                         LoadGlossList(defaultFile);
                     }
+                    else
+                    {
+                        Console.WriteLine("Not enough arguments has been passed.");
+                    }
                 }
                 else if (command == "list")
                 {
@@ -76,6 +80,10 @@ namespace MJU23v_D10_inl_sveng
 
                         dictionary.Add(new(swedishWord, englishWord));
                     }
+                    else
+                    {
+                        Console.WriteLine("Not enough arguments has been passed.");
+                    }
                 }
                 else if (command == "delete")
                 {
@@ -89,6 +97,9 @@ namespace MJU23v_D10_inl_sveng
                         string? englishWord = Input("Write word in English: "); //TODO - Add handler if this word is null
 
                         DeleteGloss(swedishWord, englishWord);
+                    } else
+                    {
+                        Console.WriteLine("Not enough arguments has been passed.");
                     }
                 }
                 else if (command == "translate")
@@ -102,6 +113,10 @@ namespace MJU23v_D10_inl_sveng
                         string? glossWord = Input("Write word to be translated: ");
 
                         TranslateGloss(glossWord);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Not enough arguments has been passed.");
                     }
                 }
                 else
@@ -140,7 +155,11 @@ namespace MJU23v_D10_inl_sveng
         {
             SweEngGloss? foundWord = dictionary.Find(gloss => gloss.word_swe == swedishWord && gloss.word_eng == englishWord);
 
-            //NYI - Add error handling if foundWord == null? (Simple CW & return)
+            if (foundWord == null)
+            {
+                Console.WriteLine("No word could be found to delete, please try again.");
+                return;
+            }
 
             dictionary.Remove(foundWord);
 

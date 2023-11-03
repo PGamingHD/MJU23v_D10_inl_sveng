@@ -25,7 +25,7 @@ namespace MJU23v_D10_inl_sveng
             do
             {
                 Console.Write("> ");
-                string[] argument = Console.ReadLine().Split(); //TODO - Add NullReferenceException error handling when no argument is passed. (And other exceptions)
+                string?[] argument = Console.ReadLine().Split(); //FIXME - Fix error handling for no arguments found!
                 string command = argument[0];
                 if (command == "quit")
                 {
@@ -46,7 +46,7 @@ namespace MJU23v_D10_inl_sveng
                 }
                 else if (command == "load")
                 {
-                    if(argument.Length == 2)
+                    if(argument.Length >= 2)
                     {
                         LoadGlossList(argument[1]);
                     }
@@ -57,7 +57,6 @@ namespace MJU23v_D10_inl_sveng
                 }
                 else if (command == "list")
                 {
-                    //TODO - Add NullReferenceException error handler over here! (And other exceptions)
                     foreach (SweEngGloss gloss in dictionary)
                     {
                         Console.WriteLine($"{gloss.word_swe,-10}  - {gloss.word_eng,-10}");
@@ -65,46 +64,42 @@ namespace MJU23v_D10_inl_sveng
                 }
                 else if (command == "new")
                 {
-                    if (argument.Length == 3)
+                    if (argument.Length >= 3)
                     {
+                        //TODO - Add handler if these words are null
                         dictionary.Add(new(argument[1], argument[2]));
                     }
                     else if(argument.Length == 1)
                     {
-                        Console.WriteLine("Write word in Swedish: ");
-                        string swedishWord = Console.ReadLine();
-                        Console.Write("Write word in English: ");
-                        string englishWord = Console.ReadLine();
+                        string? swedishWord = Input("Write word in Swedish: "); //TODO - Add handler if this word is null
+                        string? englishWord = Input("Write word in English: "); //TODO - Add handler if this word is null
 
-                        dictionary.Add(new(swedishWord, englishWord)); //TODO - Add error handler for NullReferenceException. (And other exceptions)
+                        dictionary.Add(new(swedishWord, englishWord));
                     }
                 }
                 else if (command == "delete")
                 {
-                    if (argument.Length == 3)
+                    if (argument.Length >= 3)
                     {
                         DeleteGloss(argument[1], argument[2]);
                     }
                     else if (argument.Length == 1)
                     {
-                        Console.WriteLine("Write word in Swedish: ");
-                        string swedishWord = Console.ReadLine();
-                        Console.Write("Write word in English: ");
-                        string englishWord = Console.ReadLine();
+                        string? swedishWord = Input("Write word in Swedish: "); //TODO - Add handler if this word is null
+                        string? englishWord = Input("Write word in English: "); //TODO - Add handler if this word is null
 
                         DeleteGloss(swedishWord, englishWord);
                     }
                 }
                 else if (command == "translate")
                 {
-                    if (argument.Length == 2)
+                    if (argument.Length >= 2)
                     {
                         TranslateGloss(argument[1]);
                     }
                     else if (argument.Length == 1)
                     {
-                        Console.WriteLine("Write word to be translated: ");
-                        string? glossWord = Console.ReadLine(); //TODO - Add error checking to this readline, may be null!
+                        string? glossWord = Input("Write word to be translated: ");
 
                         TranslateGloss(glossWord);
                     }
@@ -125,7 +120,7 @@ namespace MJU23v_D10_inl_sveng
 
         public static void TranslateGloss(string glossWord)
         {
-            SweEngGloss? foundWord = dictionary.Find(gloss => gloss.word_swe == glossWord || gloss.word_eng == glossWord); //TODO - Error handling for list empty (dictionary)
+            SweEngGloss? foundWord = dictionary.Find(gloss => gloss.word_swe == glossWord || gloss.word_eng == glossWord);
 
             if (foundWord != null && foundWord.word_swe == glossWord)
             {
@@ -143,7 +138,7 @@ namespace MJU23v_D10_inl_sveng
 
         public static void DeleteGloss(string swedishWord, string englishWord)
         {
-            SweEngGloss? foundWord = dictionary.Find(gloss => gloss.word_swe == swedishWord && gloss.word_eng == englishWord); //TODO - Error handling for list empty (dictionary)
+            SweEngGloss? foundWord = dictionary.Find(gloss => gloss.word_swe == swedishWord && gloss.word_eng == englishWord);
 
             //NYI - Add error handling if foundWord == null? (Simple CW & return)
 
@@ -154,7 +149,7 @@ namespace MJU23v_D10_inl_sveng
 
         public static void LoadGlossList(string file)
         {
-            using (StreamReader reader = new StreamReader(file)) //NYI - Error handler for stream reader file not found!
+            using (StreamReader reader = new StreamReader(file)) //FIXME - Fix error handling for no file found!
             {
                 dictionary = new List<SweEngGloss>(); // Empty it!
                 string line = reader.ReadLine();

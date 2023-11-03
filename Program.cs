@@ -23,7 +23,7 @@
             do
             {
                 Console.Write("> ");
-                string[] argument = Console.ReadLine().Split();
+                string[] argument = Console.ReadLine().Split(); //TODO - Add NullReferenceException error handling when no argument is passed. (And other exceptions)
                 string command = argument[0];
                 if (command == "quit")
                 {
@@ -46,36 +46,37 @@
                     if(argument.Length == 2)
                     {
                         //TODO - Add error handler for System.IO.FileNotFoundException (And other exceptions) 
-                        using (StreamReader sr = new StreamReader(argument[1]))
+                        using (StreamReader reader = new StreamReader(argument[1]))
                         {
                             dictionary = new List<SweEngGloss>(); // Empty it!
-                            string line = sr.ReadLine();
+                            string line = reader.ReadLine();
                             while (line != null)
                             {
                                 SweEngGloss gloss = new SweEngGloss(line);
                                 dictionary.Add(gloss);
-                                line = sr.ReadLine();
+                                line = reader.ReadLine();
                             }
                         }
                     }
                     else if(argument.Length == 1)
                     {
-                        using (StreamReader sr = new StreamReader(defaultFile))
+                        //TODO - Add error handler for System.IO.FileNotFoundException (And other exceptions) 
+                        using (StreamReader reader = new StreamReader(defaultFile))
                         {
                             dictionary = new List<SweEngGloss>(); // Empty it!
-                            string line = sr.ReadLine();
+                            string line = reader.ReadLine();
                             while (line != null)
                             {
                                 SweEngGloss gloss = new SweEngGloss(line);
                                 dictionary.Add(gloss);
-                                line = sr.ReadLine();
+                                line = reader.ReadLine();
                             }
                         }
                     }
                 }
                 else if (command == "list")
                 {
-                    //TODO - Add NullReferenceException error handler over here!
+                    //TODO - Add NullReferenceException error handler over here! (And other exceptions)
                     foreach (SweEngGloss gloss in dictionary)
                     {
                         Console.WriteLine($"{gloss.word_swe,-10}  - {gloss.word_eng,-10}");
@@ -90,10 +91,10 @@
                     else if(argument.Length == 1)
                     {
                         Console.WriteLine("Write word in Swedish: ");
-                        string s = Console.ReadLine();
+                        string swedishWord = Console.ReadLine();
                         Console.Write("Write word in English: ");
-                        string e = Console.ReadLine();
-                        dictionary.Add(new SweEngGloss(s, e));
+                        string englishWord = Console.ReadLine();
+                        dictionary.Add(new SweEngGloss(swedishWord, englishWord)); //TODO - Add error handler for NullReferenceException. (And other exceptions)
                     }
                 }
                 else if (command == "delete")
@@ -101,8 +102,8 @@
                     if (argument.Length == 3)
                     {
                         int index = -1;
-                        for (int i = 0; i < dictionary.Count; i++)
-                        { //TODO - Add error handler for NullReferenceException if delete ran with no commands in list!
+                        for (int i = 0; i < dictionary.Count; i++) //TODO - Add error handler for NullReferenceException if delete ran with no commands in list! (And other exceptions)
+                        {
                             SweEngGloss gloss = dictionary[i];
                             if (gloss.word_swe == argument[1] && gloss.word_eng == argument[2])
                                 index = i;
@@ -112,14 +113,14 @@
                     else if (argument.Length == 1)
                     {
                         Console.WriteLine("Write word in Swedish: ");
-                        string s = Console.ReadLine();
+                        string swedishWord = Console.ReadLine();
                         Console.Write("Write word in English: ");
-                        string e = Console.ReadLine();
+                        string englishWord = Console.ReadLine();
                         int index = -1;
-                        for (int i = 0; i < dictionary.Count; i++) //TODO - Add error handler for NullReferenceException if delete ran with no commands in list!
+                        for (int i = 0; i < dictionary.Count; i++) //TODO - Add error handler for NullReferenceException if delete ran with no commands in list! (And other exceptions)
                         {
                             SweEngGloss gloss = dictionary[i];
-                            if (gloss.word_swe == s && gloss.word_eng == e)
+                            if (gloss.word_swe == swedishWord && gloss.word_eng == englishWord)
                                 index = i;
                         }
                         dictionary.RemoveAt(index);
@@ -129,7 +130,7 @@
                 {
                     if (argument.Length == 2)
                     {
-                        foreach(SweEngGloss gloss in dictionary)
+                        foreach(SweEngGloss gloss in dictionary) //FIXME - Add better way to find the word? (List<T>.Find)?
                         {
                             if (gloss.word_swe == argument[1])
                                 Console.WriteLine($"English for {gloss.word_swe} is {gloss.word_eng}");
@@ -140,12 +141,12 @@
                     else if (argument.Length == 1)
                     {
                         Console.WriteLine("Write word to be translated: ");
-                        string s = Console.ReadLine();
-                        foreach (SweEngGloss gloss in dictionary)
+                        string swedishWord = Console.ReadLine();
+                        foreach (SweEngGloss gloss in dictionary) //FIXME - Add better way to find the word? (List<T>.Find)?
                         {
-                            if (gloss.word_swe == s)
+                            if (gloss.word_swe == swedishWord)
                                 Console.WriteLine($"English for {gloss.word_swe} is {gloss.word_eng}");
-                            if (gloss.word_eng == s)
+                            if (gloss.word_eng == swedishWord)
                                 Console.WriteLine($"Swedish for {gloss.word_eng} is {gloss.word_swe}");
                         }
                     }

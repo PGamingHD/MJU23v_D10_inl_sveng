@@ -104,14 +104,7 @@ namespace MJU23v_D10_inl_sveng
                 {
                     if (argument.Length == 3)
                     {
-                        int index = -1;
-                        for (int i = 0; i < dictionary.Count; i++) //TODO - Add error handler for NullReferenceException if delete ran with no commands in list! (And other exceptions)
-                        {
-                            SweEngGloss gloss = dictionary[i];
-                            if (gloss.word_swe == argument[1] && gloss.word_eng == argument[2])
-                                index = i;
-                        }
-                        dictionary.RemoveAt(index);
+                        DeleteGloss(argument[1], argument[2]);
                     }
                     else if (argument.Length == 1)
                     {
@@ -119,14 +112,8 @@ namespace MJU23v_D10_inl_sveng
                         string swedishWord = Console.ReadLine();
                         Console.Write("Write word in English: ");
                         string englishWord = Console.ReadLine();
-                        int index = -1;
-                        for (int i = 0; i < dictionary.Count; i++) //TODO - Add error handler for NullReferenceException if delete ran with no commands in list! (And other exceptions)
-                        {
-                            SweEngGloss gloss = dictionary[i];
-                            if (gloss.word_swe == swedishWord && gloss.word_eng == englishWord)
-                                index = i;
-                        }
-                        dictionary.RemoveAt(index);
+
+                        DeleteGloss(swedishWord, englishWord);
                     }
                 }
                 else if (command == "translate")
@@ -154,12 +141,12 @@ namespace MJU23v_D10_inl_sveng
         public static string? Input(string addVariable)
         {
             Console.Write(addVariable);
-            return Console.Readline();
+            return Console.ReadLine();
         }
 
         public static void TranslateGloss(string glossWord)
         {
-            SweEngGloss? foundWord = dictionary.Find(gloss => gloss.word_swe == glossWord || gloss.word_eng == glossWord); //NYI - Error handling for list empty (dictionary)
+            SweEngGloss? foundWord = dictionary.Find(gloss => gloss.word_swe == glossWord || gloss.word_eng == glossWord); //TODO - Error handling for list empty (dictionary)
 
             if (foundWord != null && foundWord.word_swe == glossWord)
             {
@@ -173,6 +160,17 @@ namespace MJU23v_D10_inl_sveng
             {
                 Console.WriteLine("No word could be found with that translation.");
             }
+        }
+
+        public static void DeleteGloss(string swedishWord, string englishWord)
+        {
+            SweEngGloss? foundWord = dictionary.Find(gloss => gloss.word_swe == swedishWord && gloss.word_eng == englishWord); //TODO - Error handling for list empty (dictionary)
+
+            //NYI - Add error handling if foundWord == null? (Simple CW & return)
+
+            dictionary.Remove(foundWord);
+
+            Console.WriteLine("Successfully deleted word from the dictionary.");
         }
     }
 }

@@ -28,7 +28,7 @@ namespace MJU23v_D10_inl_sveng
                 string?[] argument;
                 try
                 {
-                    argument = Console.ReadLine().Split(); //FIXME - Fix error handling for no arguments found!
+                    argument = Console.ReadLine().Split();
                 } catch (NullReferenceException) {
                     Console.WriteLine("Unknown or no command found, try again.");
                     continue;
@@ -73,9 +73,16 @@ namespace MJU23v_D10_inl_sveng
                 }
                 else if (command == "list")
                 {
-                    foreach (SweEngGloss gloss in dictionary)
+                    if (dictionary.Count == 0)
                     {
-                        Console.WriteLine($"{gloss.word_swe,-10}  - {gloss.word_eng,-10}");
+                        Console.WriteLine("No words could be found in the dictionary, add some!");
+
+                    } else
+                    {
+                        foreach (SweEngGloss gloss in dictionary)
+                        {
+                            Console.WriteLine($"{gloss.word_swe,-10}  - {gloss.word_eng,-10}");
+                        }
                     }
                 }
                 else if (command == "new")
@@ -115,8 +122,14 @@ namespace MJU23v_D10_inl_sveng
                     }
                     else if (argument.Length == 1)
                     {
-                        string? swedishWord = Input("Write word in Swedish: "); //TODO - Add handler if this word is null
-                        string? englishWord = Input("Write word in English: "); //TODO - Add handler if this word is null
+                        string? swedishWord = Input("Write word in Swedish: ");
+                        string? englishWord = Input("Write word in English: ");
+
+                        if (swedishWord == null || englishWord == null)
+                        {
+                            Console.WriteLine("Could not find entered words, please try again.");
+                            continue;
+                        }
 
                         DeleteGloss(swedishWord, englishWord);
                     } else
@@ -152,7 +165,14 @@ namespace MJU23v_D10_inl_sveng
         public static string? Input(string addVariable)
         {
             Console.Write(addVariable);
-            return Console.ReadLine(); //FIXME - Could possibly throw exceptions if out of memory
+            try
+            {
+                return Console.ReadLine();
+            } catch (OutOfMemoryException)
+            {
+                Console.WriteLine("Not enough memory left to readline, please restart application!");
+                return null;
+            }
         }
 
         public static void TranslateGloss(string glossWord)
@@ -195,7 +215,7 @@ namespace MJU23v_D10_inl_sveng
                 using (StreamReader reader = new StreamReader(file)) //FIXME - Fix error handling for no file found!
                 {
                     dictionary = new List<SweEngGloss>(); // Empty it!
-                    string line = reader.ReadLine();
+                    string? line = reader.ReadLine();
                     while (line != null)
                     {
                         SweEngGloss gloss = new SweEngGloss(line);

@@ -168,16 +168,25 @@ namespace MJU23v_D10_inl_sveng
 
         public static void LoadGlossList(string file)
         {
-            using (StreamReader reader = new StreamReader(file)) //FIXME - Fix error handling for no file found!
+            try
             {
-                dictionary = new List<SweEngGloss>(); // Empty it!
-                string line = reader.ReadLine();
-                while (line != null)
+                using (StreamReader reader = new StreamReader(file)) //FIXME - Fix error handling for no file found!
                 {
-                    SweEngGloss gloss = new SweEngGloss(line);
-                    dictionary.Add(gloss);
-                    line = reader.ReadLine();
+                    dictionary = new List<SweEngGloss>(); // Empty it!
+                    string line = reader.ReadLine();
+                    while (line != null)
+                    {
+                        SweEngGloss gloss = new SweEngGloss(line);
+                        dictionary.Add(gloss);
+                        line = reader.ReadLine();
+                    }
                 }
+            } catch (FileNotFoundException error)
+            {
+                Console.WriteLine($"Could not find file '{file}'");
+            } catch (Exception error)
+            {
+                Console.WriteLine($"Something went wrong while loading '{file}'");
             }
         }
     }

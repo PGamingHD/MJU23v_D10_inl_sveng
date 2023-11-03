@@ -30,6 +30,7 @@ namespace MJU23v_D10_inl_sveng
                 if (command == "quit")
                 {
                     Console.WriteLine("Goodbye!");
+                    break;
                 }
                 else if (command == "help")
                 {
@@ -47,33 +48,11 @@ namespace MJU23v_D10_inl_sveng
                 {
                     if(argument.Length == 2)
                     {
-                        //TODO - Add error handler for System.IO.FileNotFoundException (And other exceptions) 
-                        using (StreamReader reader = new StreamReader(argument[1]))
-                        {
-                            dictionary = new List<SweEngGloss>(); // Empty it!
-                            string line = reader.ReadLine();
-                            while (line != null)
-                            {
-                                SweEngGloss gloss = new SweEngGloss(line);
-                                dictionary.Add(gloss);
-                                line = reader.ReadLine();
-                            }
-                        }
+                        LoadGlossList(argument[1]);
                     }
                     else if(argument.Length == 1)
                     {
-                        //TODO - Add error handler for System.IO.FileNotFoundException (And other exceptions) 
-                        using (StreamReader reader = new StreamReader(defaultFile))
-                        {
-                            dictionary = new List<SweEngGloss>(); // Empty it!
-                            string line = reader.ReadLine();
-                            while (line != null)
-                            {
-                                SweEngGloss gloss = new SweEngGloss(line);
-                                dictionary.Add(gloss);
-                                line = reader.ReadLine();
-                            }
-                        }
+                        LoadGlossList(defaultFile);
                     }
                 }
                 else if (command == "list")
@@ -171,6 +150,21 @@ namespace MJU23v_D10_inl_sveng
             dictionary.Remove(foundWord);
 
             Console.WriteLine("Successfully deleted word from the dictionary.");
+        }
+
+        public static void LoadGlossList(string file)
+        {
+            using (StreamReader reader = new StreamReader(file)) //NYI - Error handler for stream reader file not found!
+            {
+                dictionary = new List<SweEngGloss>(); // Empty it!
+                string line = reader.ReadLine();
+                while (line != null)
+                {
+                    SweEngGloss gloss = new SweEngGloss(line);
+                    dictionary.Add(gloss);
+                    line = reader.ReadLine();
+                }
+            }
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace MJU23v_D10_inl_sveng
+﻿using System.Diagnostics.Tracing;
+
+namespace MJU23v_D10_inl_sveng
 {
     internal class Program
     {
@@ -94,6 +96,7 @@
                         string swedishWord = Console.ReadLine();
                         Console.Write("Write word in English: ");
                         string englishWord = Console.ReadLine();
+
                         dictionary.Add(new SweEngGloss(swedishWord, englishWord)); //TODO - Add error handler for NullReferenceException. (And other exceptions)
                     }
                 }
@@ -130,25 +133,14 @@
                 {
                     if (argument.Length == 2)
                     {
-                        foreach(SweEngGloss gloss in dictionary) //FIXME - Add better way to find the word? (List<T>.Find)?
-                        {
-                            if (gloss.word_swe == argument[1])
-                                Console.WriteLine($"English for {gloss.word_swe} is {gloss.word_eng}");
-                            if (gloss.word_eng == argument[1])
-                                Console.WriteLine($"Swedish for {gloss.word_eng} is {gloss.word_swe}");
-                        }
+                        TranslateGloss(argument[1]);
                     }
                     else if (argument.Length == 1)
                     {
                         Console.WriteLine("Write word to be translated: ");
-                        string swedishWord = Console.ReadLine();
-                        foreach (SweEngGloss gloss in dictionary) //FIXME - Add better way to find the word? (List<T>.Find)?
-                        {
-                            if (gloss.word_swe == swedishWord)
-                                Console.WriteLine($"English for {gloss.word_swe} is {gloss.word_eng}");
-                            if (gloss.word_eng == swedishWord)
-                                Console.WriteLine($"Swedish for {gloss.word_eng} is {gloss.word_swe}");
-                        }
+                        string? glossWord = Console.ReadLine(); //TODO - Add error checking to this readline, may be null!
+
+                        TranslateGloss(glossWord);
                     }
                 }
                 else
@@ -157,6 +149,30 @@
                 }
             }
             while (true);
+        }
+
+        public static string? Input(string addVariable)
+        {
+            Console.Write(addVariable);
+            return Console.Readline();
+        }
+
+        public static void TranslateGloss(string glossWord)
+        {
+            SweEngGloss? foundWord = dictionary.Find(gloss => gloss.word_swe == glossWord || gloss.word_eng == glossWord); //NYI - Error handling for list empty (dictionary)
+
+            if (foundWord != null && foundWord.word_swe == glossWord)
+            {
+                Console.WriteLine($"English for {foundWord.word_swe} is {foundWord.word_eng}");
+            }
+            else if (foundWord != null && foundWord.word_eng == glossWord)
+            {
+                Console.WriteLine($"Swedish for {foundWord.word_eng} is {foundWord.word_swe}");
+            }
+            else
+            {
+                Console.WriteLine("No word could be found with that translation.");
+            }
         }
     }
 }

@@ -25,7 +25,19 @@ namespace MJU23v_D10_inl_sveng
             do
             {
                 Console.Write("> ");
-                string?[] argument = Console.ReadLine().Split(); //FIXME - Fix error handling for no arguments found!
+                string?[] argument;
+                try
+                {
+                    argument = Console.ReadLine().Split(); //FIXME - Fix error handling for no arguments found!
+                } catch (NullReferenceException) {
+                    Console.WriteLine("Unknown or no command found, try again.");
+                    continue;
+                } catch (Exception error)
+                {
+                    Console.WriteLine("Error: " + error.Message);
+                    continue;
+                }
+
                 string command = argument[0];
                 if (command == "quit")
                 {
@@ -181,12 +193,12 @@ namespace MJU23v_D10_inl_sveng
                         line = reader.ReadLine();
                     }
                 }
-            } catch (FileNotFoundException error)
+            } catch (FileNotFoundException)
             {
                 Console.WriteLine($"Could not find file '{file}'");
-            } catch (Exception error)
+            } catch (Exception)
             {
-                Console.WriteLine($"Something went wrong while loading '{file}'");
+                Console.WriteLine("Error: " + error.Message);
             }
         }
     }

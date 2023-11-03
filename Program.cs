@@ -82,13 +82,23 @@ namespace MJU23v_D10_inl_sveng
                 {
                     if (argument.Length >= 3)
                     {
-                        //TODO - Add handler if these words are null
+                        if (argument[1] == null || argument[2] == null)
+                        {
+                            Console.WriteLine("Could not find entered words, please try again.");
+                            continue;
+                        }
                         dictionary.Add(new(argument[1], argument[2]));
                     }
                     else if(argument.Length == 1)
                     {
-                        string? swedishWord = Input("Write word in Swedish: "); //TODO - Add handler if this word is null
-                        string? englishWord = Input("Write word in English: "); //TODO - Add handler if this word is null
+                        string? swedishWord = Input("Write word in Swedish: ");
+                        string? englishWord = Input("Write word in English: ");
+
+                        if (swedishWord == null || englishWord == null)
+                        {
+                            Console.WriteLine("Could not find entered words, please try again.");
+                            continue;
+                        }
 
                         dictionary.Add(new(swedishWord, englishWord));
                     }
@@ -142,7 +152,7 @@ namespace MJU23v_D10_inl_sveng
         public static string? Input(string addVariable)
         {
             Console.Write(addVariable);
-            return Console.ReadLine();
+            return Console.ReadLine(); //FIXME - Could possibly throw exceptions if out of memory
         }
 
         public static void TranslateGloss(string glossWord)
@@ -196,7 +206,7 @@ namespace MJU23v_D10_inl_sveng
             } catch (FileNotFoundException)
             {
                 Console.WriteLine($"Could not find file '{file}'");
-            } catch (Exception)
+            } catch (Exception error)
             {
                 Console.WriteLine("Error: " + error.Message);
             }

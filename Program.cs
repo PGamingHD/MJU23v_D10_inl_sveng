@@ -29,6 +29,18 @@
                 {
                     Console.WriteLine("Goodbye!");
                 }
+                else if (command == "help")
+                {
+                    Console.WriteLine(" <Help is always required, here is some for you aswell>");
+                    Console.WriteLine(" <() - Not required parameters | [] - Required parameters>");
+                    Console.WriteLine("  load (file) -> Load a file or the default file.");
+                    Console.WriteLine("  list -> List all words in the dictionary.");
+                    Console.WriteLine("  new (swe) (eng) -> Add a new word into the dictionary.");
+                    Console.WriteLine("  delete (swe) (eng) -> Delete a word from the dictionary.");
+                    Console.WriteLine("  translate (swe) (eng) -> Translate a word from swedish to english.");
+                    Console.WriteLine("  quit -> Quit the program and say goodbye.");
+                    Console.WriteLine(" <Help is always required, here is some for you aswell>");
+                }
                 else if (command == "load")
                 {
                     if(argument.Length == 2)
@@ -89,7 +101,8 @@
                     if (argument.Length == 3)
                     {
                         int index = -1;
-                        for (int i = 0; i < dictionary.Count; i++) {
+                        for (int i = 0; i < dictionary.Count; i++)
+                        { //TODO - Add error handler for NullReferenceException if delete ran with no commands in list!
                             SweEngGloss gloss = dictionary[i];
                             if (gloss.word_swe == argument[1] && gloss.word_eng == argument[2])
                                 index = i;

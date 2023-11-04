@@ -25,144 +25,156 @@ namespace MJU23v_D10_inl_sveng
             string defaultFile = "..\\..\\..\\dict\\sweeng.lis";
             Console.WriteLine("Welcome to the dictionary app!");
 
-            do
+            /* Command Registration */
+
+            RegisterCommand("quit", (args) =>
             {
-                string?[] argument;
-                try
+                Console.WriteLine("Goodbye, hope to see you soon!");
+
+                Environment.Exit(0);
+            }, new string[] {"exit", "stop"});
+
+            RegisterCommand("clear", (args) =>
+            {
+                Console.Clear();
+                Console.WriteLine("Welcome to PG Addresslist v0.0.1!");
+            }, new string[] { "cls", "clr" });
+
+            RegisterCommand("help", (args) =>
+            {
+                Console.WriteLine(" <Help is always required, here is some for you aswell>");
+                Console.WriteLine("  <() - Not required parameters | [] - Required parameters>");
+                Console.WriteLine("  load (file) -> Load a file or the default file.");
+                Console.WriteLine("  list -> List all words in the dictionary.");
+                Console.WriteLine("  new (swe) (eng) -> Add a new word into the dictionary.");
+                Console.WriteLine("  delete (swe) (eng) -> Delete a word from the dictionary.");
+                Console.WriteLine("  translate (swe) (eng) -> Translate a word from swedish to english.");
+                Console.WriteLine("  quit -> Quit the program and say goodbye.");
+                Console.WriteLine(" <Help is always required, here is some for you aswell>");
+            }, new string[] { "hp" });
+
+            RegisterCommand("load", (args) =>
+            {
+                if (args.Length >= 1)
                 {
-                    argument = Input("> ").Split();
-                } catch (NullReferenceException) {
-                    Console.WriteLine("Unknown or no command found, try again.");
-                    continue;
-                } catch (Exception error)
-                {
-                    Console.WriteLine("Error: " + error.Message);
-                    continue;
+                    LoadGlossList(args[0]);
                 }
-
-                string command = argument[0];
-                if (command == "quit")
+                else if (args.Length == 0)
                 {
-                    Console.WriteLine("Goodbye!");
-                    break;
-                }
-                else if (command == "help")
-                {
-                    Console.WriteLine(" <Help is always required, here is some for you aswell>");
-                    Console.WriteLine("  <() - Not required parameters | [] - Required parameters>");
-                    Console.WriteLine("  load (file) -> Load a file or the default file.");
-                    Console.WriteLine("  list -> List all words in the dictionary.");
-                    Console.WriteLine("  new (swe) (eng) -> Add a new word into the dictionary.");
-                    Console.WriteLine("  delete (swe) (eng) -> Delete a word from the dictionary.");
-                    Console.WriteLine("  translate (swe) (eng) -> Translate a word from swedish to english.");
-                    Console.WriteLine("  quit -> Quit the program and say goodbye.");
-                    Console.WriteLine(" <Help is always required, here is some for you aswell>");
-                }
-                else if (command == "load")
-                {
-                    if(argument.Length >= 2)
-                    {
-                        LoadGlossList(argument[1]);
-                    }
-                    else if(argument.Length == 1)
-                    {
-                        LoadGlossList(defaultFile);
-                    }
-                    else
-                    {
-                        Console.WriteLine("Not enough arguments has been passed.");
-                    }
-                }
-                else if (command == "list")
-                {
-                    if (dictionary.Count == 0)
-                    {
-                        Console.WriteLine("No words could be found in the dictionary, add some!");
-
-                    } else
-                    {
-                        foreach (SweEngGloss gloss in dictionary)
-                        {
-                            Console.WriteLine($"{gloss.word_swe,-10}  - {gloss.word_eng,-10}");
-                        }
-                    }
-                }
-                else if (command == "new")
-                {
-                    if (argument.Length >= 3)
-                    {
-                        if (argument[1] == null || argument[2] == null)
-                        {
-                            Console.WriteLine("Could not find entered words, please try again.");
-                            continue;
-                        }
-
-                        dictionary.Add(new(argument[1], argument[2]));
-                    }
-                    else if(argument.Length == 1)
-                    {
-                        string? swedishWord = Input("Write word in Swedish: ");
-                        string? englishWord = Input("Write word in English: ");
-
-                        if (swedishWord == null || englishWord == null)
-                        {
-                            Console.WriteLine("Could not find entered words, please try again.");
-                            continue;
-                        }
-
-                        dictionary.Add(new(swedishWord, englishWord));
-                    }
-                    else
-                    {
-                        Console.WriteLine("Not enough arguments has been passed.");
-                    }
-                }
-                else if (command == "delete")
-                {
-                    if (argument.Length >= 3)
-                    {
-                        DeleteGloss(argument[1], argument[2]);
-                    }
-                    else if (argument.Length == 1)
-                    {
-                        string? swedishWord = Input("Write word in Swedish: ");
-                        string? englishWord = Input("Write word in English: ");
-
-                        if (swedishWord == null || englishWord == null)
-                        {
-                            Console.WriteLine("Could not find entered words, please try again.");
-                            continue;
-                        }
-
-                        DeleteGloss(swedishWord, englishWord);
-                    } else
-                    {
-                        Console.WriteLine("Not enough arguments has been passed.");
-                    }
-                }
-                else if (command == "translate")
-                {
-                    if (argument.Length >= 2)
-                    {
-                        TranslateGloss(argument[1]);
-                    }
-                    else if (argument.Length == 1)
-                    {
-                        string? glossWord = Input("Write word to be translated: ");
-
-                        TranslateGloss(glossWord);
-                    }
-                    else
-                    {
-                        Console.WriteLine("Not enough arguments has been passed.");
-                    }
+                    LoadGlossList(defaultFile);
                 }
                 else
                 {
-                    Console.WriteLine($"Unknown command: '{command}'");
+                    Console.WriteLine("Not enough arguments has been passed.");
                 }
+            }, new string[] { "ld" });
+
+            RegisterCommand("list", (args) =>
+            {
+                if (dictionary.Count == 0)
+                {
+                    Console.WriteLine("No words could be found in the dictionary, add some!");
+
+                }
+                else
+                {
+                    foreach (SweEngGloss gloss in dictionary)
+                    {
+                        Console.WriteLine($"{gloss.word_swe,-10}  - {gloss.word_eng,-10}");
+                    }
+                }
+            }, new string[] { "ls" });
+
+            RegisterCommand("new", (args) =>
+            {
+                if (args.Length >= 2)
+                {
+                    if (args[0] == null || args[1] == null)
+                    {
+                        Console.WriteLine("Could not find entered words, please try again.");
+                        return;
+                    }
+
+                    dictionary.Add(new(args[0], args[1]));
+                }
+                else if (args.Length == 0)
+                {
+                    string? swedishWord = Input("Write word in Swedish: ");
+                    string? englishWord = Input("Write word in English: ");
+
+                    if (swedishWord == null || englishWord == null)
+                    {
+                        Console.WriteLine("Could not find entered words, please try again.");
+                        return;
+                    }
+
+                    dictionary.Add(new(swedishWord, englishWord));
+                }
+                else
+                {
+                    Console.WriteLine("Not enough arguments has been passed.");
+                }
+            }, new string[] { "add" });
+
+            RegisterCommand("delete", (args) =>
+            {
+                if (args.Length >= 2)
+                {
+                    DeleteGloss(args[0], args[1]);
+                }
+                else if (args.Length == 0)
+                {
+                    string? swedishWord = Input("Write word in Swedish: ");
+                    string? englishWord = Input("Write word in English: ");
+
+                    if (swedishWord == null || englishWord == null)
+                    {
+                        Console.WriteLine("Could not find entered words, please try again.");
+                        return;
+                    }
+
+                    DeleteGloss(swedishWord, englishWord);
+                }
+                else
+                {
+                    Console.WriteLine("Not enough arguments has been passed.");
+                }
+            }, new string[] { "del", "remove" });
+
+            RegisterCommand("translate", (args) =>
+            {
+                if (args.Length >= 1)
+                {
+                    TranslateGloss(args[0]);
+                }
+                else if (args.Length == 1)
+                {
+                    string? glossWord = Input("Write word to be translated: ");
+
+                    TranslateGloss(glossWord);
+                }
+                else
+                {
+                    Console.WriteLine("Not enough arguments has been passed.");
+                }
+            }, new string[] { "trans" });
+
+            /* Command Registration */
+
+            while (true)
+            {
+                //Get the console input
+                string? input = Input("Command > ");
+
+                //If no input then continue the loop and ask for new command to be entered.
+                if (input == null) continue;
+
+                //Split up input into arguments that is passed through the command.
+                string[] inputArgs = input.Split(' ');
+
+                //Run command if found
+                RunCommand(inputArgs);
             }
-            while (true);
         }
 
         public static string? Input(string addVariable)
@@ -174,6 +186,10 @@ namespace MJU23v_D10_inl_sveng
             } catch (OutOfMemoryException)
             {
                 Console.WriteLine("Not enough memory left to readline, please restart application!");
+                return null;
+            } catch (Exception error)
+            {
+                Console.WriteLine("Error: " + error.Message);
                 return null;
             }
         }
@@ -215,7 +231,7 @@ namespace MJU23v_D10_inl_sveng
         {
             try
             {
-                using (StreamReader reader = new StreamReader(file)) //FIXME - Fix error handling for no file found!
+                using (StreamReader reader = new StreamReader(file))
                 {
                     dictionary = new List<SweEngGloss>(); // Empty it!
                     string? line = reader.ReadLine();

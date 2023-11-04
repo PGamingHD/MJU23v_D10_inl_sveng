@@ -4,6 +4,7 @@ namespace MJU23v_D10_inl_sveng
 {
     internal class Program
     {
+        static readonly List<Command> commands = new();
         static List<SweEngGloss> dictionary = new List<SweEngGloss>();
         class SweEngGloss
         {
@@ -22,13 +23,13 @@ namespace MJU23v_D10_inl_sveng
         {
             string defaultFile = "..\\..\\..\\dict\\sweeng.lis";
             Console.WriteLine("Welcome to the dictionary app!");
+
             do
             {
-                Console.Write("> ");
                 string?[] argument;
                 try
                 {
-                    argument = Console.ReadLine().Split();
+                    argument = Input("> ").Split();
                 } catch (NullReferenceException) {
                     Console.WriteLine("Unknown or no command found, try again.");
                     continue;
@@ -47,7 +48,7 @@ namespace MJU23v_D10_inl_sveng
                 else if (command == "help")
                 {
                     Console.WriteLine(" <Help is always required, here is some for you aswell>");
-                    Console.WriteLine(" <() - Not required parameters | [] - Required parameters>");
+                    Console.WriteLine("  <() - Not required parameters | [] - Required parameters>");
                     Console.WriteLine("  load (file) -> Load a file or the default file.");
                     Console.WriteLine("  list -> List all words in the dictionary.");
                     Console.WriteLine("  new (swe) (eng) -> Add a new word into the dictionary.");
@@ -94,6 +95,7 @@ namespace MJU23v_D10_inl_sveng
                             Console.WriteLine("Could not find entered words, please try again.");
                             continue;
                         }
+
                         dictionary.Add(new(argument[1], argument[2]));
                     }
                     else if(argument.Length == 1)

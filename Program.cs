@@ -37,7 +37,7 @@ namespace MJU23v_D10_inl_sveng
             RegisterCommand("clear", (args) =>
             {
                 Console.Clear();
-                Console.WriteLine("Welcome to PG Addresslist v0.0.1!");
+                Console.WriteLine("Welcome to the dictionary app!");
             }, new string[] { "cls", "clr" });
 
             RegisterCommand("help", (args) =>
@@ -147,9 +147,11 @@ namespace MJU23v_D10_inl_sveng
                 {
                     TranslateGloss(args[0]);
                 }
-                else if (args.Length == 1)
+                else if (args.Length == 0)
                 {
                     string? glossWord = Input("Write word to be translated: ");
+
+                    if (glossWord == null) return;
 
                     TranslateGloss(glossWord);
                 }

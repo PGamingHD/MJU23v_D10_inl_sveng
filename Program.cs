@@ -6,6 +6,7 @@ namespace MJU23v_D10_inl_sveng
     {
         static readonly List<Command> commands = new();
         static List<SweEngGloss> dictionary = new List<SweEngGloss>();
+
         class SweEngGloss
         {
             public string word_swe, word_eng;
@@ -232,6 +233,52 @@ namespace MJU23v_D10_inl_sveng
             {
                 Console.WriteLine("Error: " + error.Message);
             }
+        }
+
+        static public void RegisterCommand(string name, CommandAction action, string[] alias)
+        {
+            commands.Add(new(name, alias, action));
+        }
+
+        static public void RunCommand(string[] inputArgs)
+        {
+            if (inputArgs.Length == 0) return;
+
+            string commandName = inputArgs[0];
+
+            Command? foundcmd = commands.Find(cmd => cmd.GetCommand().ToLower() == commandName.ToLower());
+
+            if (foundcmd != null)
+            {
+                // Pass the arguments (excluding the command name) to the command
+                foundcmd.ExecuteCommand(inputArgs[1..]);
+                return;
+            }
+
+            foreach (Command cmd in commands)
+            {
+                string[] aliases = cmd.GetAlias();
+
+                foreach (string alias in aliases)
+                {
+                    if (alias.ToLower() == commandName.ToLower())
+                    {
+                        foundcmd = cmd;
+                        break;
+                    }
+                }
+
+                if (foundcmd != null) break;
+            }
+
+            if (foundcmd != null)
+            {
+                // Pass the arguments (excluding the command name) to the command
+                foundcmd.ExecuteCommand(inputArgs[1..]);
+                return;
+            }
+
+            Console.WriteLine("Command " + "'" + commandName + "'" + " is not recognized as an internal or external command. (use 'help')");
         }
     }
 }

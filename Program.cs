@@ -5,7 +5,7 @@ namespace MJU23v_D10_inl_sveng
     internal class Program
     {
         static readonly List<Command> commands = new();
-        static List<SweEngGloss> dictionary = new List<SweEngGloss>();
+        static List<SweEngGloss> dictionary = new();
 
         class SweEngGloss
         {
